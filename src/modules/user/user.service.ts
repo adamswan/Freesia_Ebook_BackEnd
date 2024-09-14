@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 
 
 @Injectable()
@@ -15,27 +15,42 @@ export class UserService {
   ) {
 
   }
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  // 新增用户
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    // 先创建 user 实例
+    const newUser = new User()
+    // 再把传入的对象，添加为 user 实例的属性
+    newUser.username = createUserDto.username
+    newUser.password = createUserDto.password
+    newUser.role = createUserDto.role
+    newUser.avatar = createUserDto.avatar
+    newUser.nickname = createUserDto.nickname
+    newUser.active = 1 // 默认激活
+    const res = await this.userRepository.save(newUser)
+    // console.log('res1', res)
+    return res;
   }
 
+  // 查询所有用户
   findAll() {
-    return `This action returns all user`;
+    return this.userRepository.find();
   }
 
-
-  findOne(id: number): Promise<User> {
+  // 查询单个用户
+  findOne(id: number): Promise<User> {// 泛型参数 User 就是 user.entity.ts 中类规定的那些属性
     console.log('jiao', id)
     return this.userRepository.findOneBy({
       id
     })
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  // 删除指定用户
+  remove(id: number): Promise<DeleteResult> {
+    return this.userRepository.delete(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  update(id: number, updateUserDto: UpdateUserDto) {
+    return `This action updates a #${id} user`;
   }
 }
