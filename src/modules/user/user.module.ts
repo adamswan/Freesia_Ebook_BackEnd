@@ -8,6 +8,7 @@ import { User } from './entities/user.entity';
   controllers: [UserController],
   providers: [UserService],
   imports: [
+    // 引入实体文件
     TypeOrmModule.forFeature([User])
   ]
 })
