@@ -1,5 +1,4 @@
-export class CreateAuthDto {
+export interface UserLogin {
     username: string
-
     password: string
 }

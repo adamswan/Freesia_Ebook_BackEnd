@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
+import { UserLogin } from 'src/types/user';
 
 
 @Injectable()
@@ -52,5 +53,10 @@ export class UserService {
 
   update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
+  }
+
+  // 登录时查询用户是否存在, 用户名是唯一的
+  findByUsername(username: string): Promise<User> {
+    return this.userRepository.findOneBy({ username })
   }
 }

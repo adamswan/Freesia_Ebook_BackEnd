@@ -10,6 +10,8 @@ import { User } from './entities/user.entity';
   imports: [
     // 引入实体文件
     TypeOrmModule.forFeature([User])
-  ]
+  ],
+  exports: [UserService]
 })
+
 export class UserModule {}
