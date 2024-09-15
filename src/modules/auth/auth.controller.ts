@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { Public } from './public.decorator';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { HttpExceptionFilter } from 'src/http-exception/http-exception';
 import { UserLogin } from 'src/types/user';
+import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
 @Controller('auth')
 @UseFilters(HttpExceptionFilter) // 控制器级别的拦截器
@@ -14,6 +15,7 @@ export class AuthController {
   // 登录
   @Post('login')
   @Public() // 标识为公共接口，不需要校验 token
+  @UseInterceptors(FormattInterceptor)
   login(@Body() params: UserLogin) {
    return this.authService.login(params.username, params.password)
   }

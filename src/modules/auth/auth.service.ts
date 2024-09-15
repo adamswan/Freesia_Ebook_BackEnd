@@ -33,7 +33,6 @@ export class AuthService {
       }
       const token = await this.jwtService.signAsync(payload)
       return {
-        code: 0,
         result: { token },
         message: '登录成功'
       }

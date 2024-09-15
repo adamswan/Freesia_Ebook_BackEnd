@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseFilters, Request, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { HttpExceptionFilter } from 'src/http-exception/http-exception';
+import { PayloadOfRequest } from 'src/types/user';
+import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
 @Controller('user')
 @UseFilters(HttpExceptionFilter)
@@ -21,9 +23,12 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  // 获取用户资料
+  // 在 auth.guard.ts 中，已经payload添加到了请求对象上
   @Get('info')
-  getUserInfo() {
-    return '这是用户信息'
+  @UseInterceptors(FormattInterceptor) // 使用响应拦截器格式化响应数据
+  getUserInfoByToken(@Request() requestObj: PayloadOfRequest) {
+    return this.userService.getUserInfoByToken(requestObj.username)
   }
 
   // 查询单个用户
@@ -46,7 +51,4 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
-
-
-
 }

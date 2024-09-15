@@ -4,7 +4,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
-import { UserLogin } from 'src/types/user';
+// import { UserLogin } from 'src/types/user';
+// import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
 
 @Injectable()
@@ -12,7 +13,8 @@ export class UserService {
   constructor(
     //! 注入 user 表的存储库
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
+    // private readonly formatInterceptor: FormattInterceptor
   ) {
 
   }
@@ -40,7 +42,6 @@ export class UserService {
 
   // 查询单个用户
   findOne(id: number): Promise<User> {// 泛型参数 User 就是 user.entity.ts 中类规定的那些属性
-    console.log('jiao', id)
     return this.userRepository.findOneBy({
       id
     })
@@ -58,5 +59,17 @@ export class UserService {
   // 登录时查询用户是否存在, 用户名是唯一的
   findByUsername(username: string): Promise<User> {
     return this.userRepository.findOneBy({ username })
+  }
+
+  // 获取用户资料
+  async getUserInfoByToken(username: string) {
+    const uesr = await this.userRepository.findOne({
+      // 排除掉 password
+      select: ['id', 'role', 'avatar', 'nickname', 'active'],
+      where: { username }
+    })
+    return {
+      result: uesr
+    }
   }
 }
