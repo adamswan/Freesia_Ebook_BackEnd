@@ -21,6 +21,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('info')
+  getUserInfo() {
+    return '这是用户信息'
+  }
+
   // 查询单个用户
   @Get(':id')
   findUser(
@@ -41,5 +46,7 @@ export class UserController {
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
+
+
 
 }

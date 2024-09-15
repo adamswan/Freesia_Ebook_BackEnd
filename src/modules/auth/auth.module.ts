@@ -5,6 +5,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
+import { jwtConstants } from './constants/jwtConstants'
 
 @Module({
   controllers: [AuthController],
@@ -23,7 +24,7 @@ import { JwtModule } from '@nestjs/jwt';
     // 配置 JWT
     JwtModule.register({
       global: true,
-      secret: 'adamswan', // 私钥
+      secret: jwtConstants.secret, // 私钥
       signOptions: {
         // 过期时间
         expiresIn: `${24 * 60 * 60}s`
