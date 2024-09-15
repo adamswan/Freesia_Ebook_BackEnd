@@ -14,8 +14,8 @@ export class AuthController {
   // 登录
   @Post('login')
   @Public() // 标识为公共接口，不需要校验 token
-  async login(@Body() params: UserLogin) {
-    await this.authService.login(params.username, params.password);
+  login(@Body() params: UserLogin) {
+   return this.authService.login(params.username, params.password)
   }
 
   // 注册

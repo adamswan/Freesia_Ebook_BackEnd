@@ -4,9 +4,11 @@ import { AuthController } from './auth.controller';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth.guard';
 import { UserModule } from '../user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   controllers: [AuthController],
+
   providers: [
     AuthService,
     // Nest 将自动把 AuthGuard 绑定为全局守卫
@@ -15,6 +17,18 @@ import { UserModule } from '../user/user.module';
       useClass: AuthGuard,
     },
   ],
-  imports: [UserModule]
+
+  imports: [
+    UserModule,
+    // 配置 JWT
+    JwtModule.register({
+      global: true,
+      secret: 'adamswan', // 私钥
+      signOptions: {
+        // 过期时间
+        expiresIn: `${24 * 60 * 60}s`
+      }
+    })
+  ]
 })
-export class AuthModule {}
+export class AuthModule { }
