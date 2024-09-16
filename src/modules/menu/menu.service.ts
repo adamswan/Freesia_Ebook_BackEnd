@@ -1,0 +1,122 @@
+import { Injectable } from '@nestjs/common';
+import { CreateMenuDto } from './dto/create-menu.dto';
+import { UpdateMenuDto } from './dto/update-menu.dto';
+import { Menu } from './entities/menu.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+
+@Injectable()
+export class MenuService {
+
+  constructor(
+    @InjectRepository(Menu) // 必须使用 InjectRepository 装饰这个参数, 它才能使用存储库
+    private menuRepository: Repository<Menu>
+  ) {
+
+  }
+
+  create(createMenuDto: CreateMenuDto) {
+    return 'This action adds a new menu';
+  }
+
+  async findAll() {
+    // return {
+    //   result: `[{"path":"/about","name":"About","redirect":"/about/index","meta":{"hideChildrenInMenu":true,"icon":"simple-icons:about-dot-me","title":"routes.dashboard.about","orderNo":100000},"children":[{"path":"index","name":"AboutPage","meta":{"title":"routes.dashboard.about","icon":"simple-icons:about-dot-me","hideMenu":true}}]},{"path":"/dashboard","name":"Dashboard","redirect":"/dashboard/analysis","meta":{"orderNo":10,"icon":"ion:grid-outline","title":"routes.dashboard.dashboard"},"children":[{"path":"analysis","name":"Analysis","meta":{"title":"routes.dashboard.analysis"}},{"path":"workbench","name":"Workbench","meta":{"title":"routes.dashboard.workbench"}}]},{"path": "/charts",
+    //     "name": "Charts",
+    //   "redirect": "/charts/echarts/map",
+    //   "meta": {
+    //     "orderNo": 500,
+    //     "icon": "ion:bar-chart-outline",
+    //     "title": "routes.demo.charts.charts"
+    //   },
+    //   "children": [
+    //     {
+    //       "path": "baiduMap",
+    //       "name": "BaiduMap",
+    //       "meta": {
+    //         "title": "routes.demo.charts.baiduMap"
+    //       }
+    //     },
+    //     {
+    //       "path": "aMap",
+    //       "name": "AMap",
+    //       "meta": {
+    //         "title": "routes.demo.charts.aMap"
+    //       }
+    //     },
+    //     {
+    //       "path": "googleMap",
+    //       "name": "GoogleMap",
+    //       "meta": {
+    //         "title": "routes.demo.charts.googleMap"
+    //       }
+    //     },
+    //     {
+    //       "path": "echarts",
+    //       "name": "Echarts",
+    //       "meta": {
+    //         "title": "Echarts"
+    //       },
+    //       "redirect": "/charts/echarts/map",
+    //       "children": [
+    //         {
+    //           "path": "map",
+    //           "name": "Map",
+    //           "meta": {
+    //             "title": "routes.demo.charts.map"
+    //           }
+    //         },
+    //         {
+    //           "path": "line",
+    //           "name": "Line",
+    //           "meta": {
+    //             "title": "routes.demo.charts.line"
+    //           }
+    //         },
+    //         {
+    //           "path": "pie",
+    //           "name": "Pie",
+    //           "meta": {
+    //             "title": "routes.demo.charts.pie"
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   ]
+    // },
+    // {
+    //     "path": "/permission",
+    //     "name": "Permission",
+    //     "redirect": "/permission/menu",
+    //     "meta": {"orderNo":15,"icon":"ion:key-outline","title":"routes.demo.permission.permission"},
+    //     "children": [
+    //         {
+    //             "path": "menu",
+    //             "name": "PermissionMenu",
+    //             "meta": {"title": "routes.demo.permission.menu"}
+    //         }
+    //     ]
+    // }]`,
+    //   message: '获取菜单成功'
+    // };
+
+    // 获取所有已经激活的菜单
+    const allMenu = await this.menuRepository.findBy({ active: 1 })
+
+    return {
+      result: allMenu
+    }
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} menu`;
+  }
+
+  update(id: number, updateMenuDto: UpdateMenuDto) {
+    return `This action updates a #${id} menu`;
+  }
+
+  remove(id: number) {
+    return `This action removes a #${id} menu`;
+  }
+}

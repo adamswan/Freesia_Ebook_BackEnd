@@ -28,7 +28,7 @@ export class UserController {
   @Get('info')
   @UseInterceptors(FormattInterceptor) // 使用响应拦截器格式化响应数据
   getUserInfoByToken(@Request() requestObj: PayloadOfRequest) {
-    return this.userService.getUserInfoByToken(requestObj.username)
+    return this.userService.getUserInfoByToken(requestObj.user.username)
   }
 
   // 查询单个用户

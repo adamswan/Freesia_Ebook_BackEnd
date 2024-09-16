@@ -5,6 +5,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MenuModule } from './modules/menu/menu.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
@@ -30,6 +31,7 @@ dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
       //! 如果为true, 将自动加载实体, forFeature() 方法注册的每个实体都将自动添加到配置对象的实体数组中
       autoLoadEntities: true,
     }),
+    MenuModule,
   ],
 })
 export class AppModule { }
