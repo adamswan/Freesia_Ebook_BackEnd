@@ -14,6 +14,13 @@ export class MenuController {
     return this.menuService.create(createMenuDto);
   }
 
+  // 获取用户已激活的菜单
+  @Get('active')
+  @UseInterceptors(FormattInterceptor)
+  getActiveMenu() {
+    return this.menuService.findActive();
+  }
+
   // 获取用户具有的所有菜单
   @Get()
   @UseInterceptors(FormattInterceptor)

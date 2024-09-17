@@ -19,6 +19,16 @@ export class MenuService {
     return 'This action adds a new menu';
   }
 
+  // 获取用户已激活的菜单
+  async findActive() {
+    const allMenu = await this.menuRepository.findBy({ active: 1 })
+
+    return {
+      result: allMenu
+    }
+  }
+
+  // 获取用户具有的所有菜单
   async findAll() {
     // return {
     //   result: `[{"path":"/about","name":"About","redirect":"/about/index","meta":{"hideChildrenInMenu":true,"icon":"simple-icons:about-dot-me","title":"routes.dashboard.about","orderNo":100000},"children":[{"path":"index","name":"AboutPage","meta":{"title":"routes.dashboard.about","icon":"simple-icons:about-dot-me","hideMenu":true}}]},{"path":"/dashboard","name":"Dashboard","redirect":"/dashboard/analysis","meta":{"orderNo":10,"icon":"ion:grid-outline","title":"routes.dashboard.dashboard"},"children":[{"path":"analysis","name":"Analysis","meta":{"title":"routes.dashboard.analysis"}},{"path":"workbench","name":"Workbench","meta":{"title":"routes.dashboard.workbench"}}]},{"path": "/charts",
@@ -101,7 +111,7 @@ export class MenuService {
     // };
 
     // 获取所有已经激活的菜单
-    const allMenu = await this.menuRepository.findBy({ active: 1 })
+    const allMenu = await this.menuRepository.find()
 
     return {
       result: allMenu
