@@ -134,11 +134,22 @@ export class MenuService {
     return `This action returns a #${id} menu`;
   }
 
-  update(id: number, updateMenuDto: UpdateMenuDto) {
-    return `This action updates a #${id} menu`;
+  // 更新菜单
+  async update(id, updateMenuDto: UpdateMenuDto) {
+    console.log('editMenu', updateMenuDto)
+    const res = await this.menuRepository.update(id, updateMenuDto)
+    return {
+      result: res,
+      message: '更新成功'
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} menu`;
+  async remove(id: number) {
+    const res = await this.menuRepository.delete(id);
+    return {
+      result: res,
+      message: '删除成功'
+    }
+
   }
 }

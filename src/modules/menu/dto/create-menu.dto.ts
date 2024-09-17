@@ -24,5 +24,4 @@ export class CreateMenuDto {
     // 是否启用, 1表示已激活, 0表示未激活
     @IsInt()
     active: number
-
 }
