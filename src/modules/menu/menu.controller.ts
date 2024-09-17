@@ -9,7 +9,9 @@ import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor'
 export class MenuController {
   constructor(private readonly menuService: MenuService) {}
 
+  // 创建新菜单
   @Post()
+  @UseInterceptors(FormattInterceptor)
   create(@Body() createMenuDto: CreateMenuDto) {
     return this.menuService.create(createMenuDto);
   }

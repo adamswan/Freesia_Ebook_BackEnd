@@ -32,7 +32,4 @@ export class Menu {
         default: 1 // 默认为1
     })
     active: number
-
-
-
 }

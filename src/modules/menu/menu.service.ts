@@ -10,13 +10,25 @@ export class MenuService {
 
   constructor(
     @InjectRepository(Menu) // 必须使用 InjectRepository 装饰这个参数, 它才能使用存储库
-    private menuRepository: Repository<Menu>
+    private readonly menuRepository: Repository<Menu>
   ) {
 
   }
 
-  create(createMenuDto: CreateMenuDto) {
-    return 'This action adds a new menu';
+  async create(createMenuDto: CreateMenuDto) {
+    const newMenu = new Menu()
+    newMenu.path = createMenuDto.path
+    newMenu.name = createMenuDto.name
+    newMenu.redirect = createMenuDto.redirect
+    newMenu.pid = createMenuDto.pid
+    // newMenu.meta = JSON.stringify(createMenuDto.meta)
+    newMenu.meta = createMenuDto.meta
+    newMenu.active = createMenuDto.active
+
+    const res = await this.menuRepository.save(newMenu)
+    return {
+      result: res
+    }
   }
 
   // 获取用户已激活的菜单
