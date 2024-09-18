@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseInterceptors } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
+import { BookSearch } from 'src/types/book';
+import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
 @Controller('book')
 export class BookController {
@@ -12,14 +14,18 @@ export class BookController {
     return this.bookService.create(createBookDto);
   }
 
+  // 获取所有书
   @Get()
-  findAll() {
-    return this.bookService.findAll();
+  @UseInterceptors(FormattInterceptor) // 使用响应拦截器格式化响应数据
+  findBookList(@Query() queryObj: BookSearch) {
+    return this.bookService.findAll(queryObj);
   }
 
+  // 获取单本书
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.bookService.findOne(+id);
+  @UseInterceptors(FormattInterceptor) // 使用响应拦截器格式化响应数据
+  findOneBook(@Param('id', ParseIntPipe) id: number) {
+    return this.bookService.findOne(id);
   }
 
   @Patch(':id')

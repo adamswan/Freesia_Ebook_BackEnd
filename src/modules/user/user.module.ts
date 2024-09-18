@@ -11,6 +11,7 @@ import { User } from './entities/user.entity';
     // 引入实体文件
     TypeOrmModule.forFeature([User])
   ],
+  // 共享出去的服务
   exports: [UserService]
 })
 
