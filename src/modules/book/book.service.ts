@@ -4,6 +4,9 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './entities/book.entity';
 import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as fs from 'fs'
+import * as path from 'path'
+import { ParseEpubBook } from './ParseEpubBook';
 
 @Injectable()
 export class BookService {
@@ -18,7 +21,7 @@ export class BookService {
     return 'This action adds a new book';
   }
 
-  // 获取所有书
+  // 查询所有符合筛选条件的书
   async findAll(queryObj) {
     let page = Number(queryObj.page) || 1 // 页码
     let pageSize = Number(queryObj.pageSize) || 10 // 要多少条数据
@@ -51,7 +54,7 @@ export class BookService {
         author: author ? Like(`%${author}%`) : Like(`%%`) // 根据作者查找, 支持模糊查询
       }
     }
- 
+
     const res = await this.bookRepository.find(searchObj)
     const total = await this.bookRepository.count(totalNum)
 
@@ -77,6 +80,40 @@ export class BookService {
       result: res,
       message: '查询成功'
     };
+  }
+
+  // 上传电子书
+  async handleUploadBook(file: Express.Multer.File) {
+    // console.log('file', file);
+
+    const originalname = file.originalname // 文件原始名称
+    const mimetype = file.mimetype // 文件媒体格式
+    const size = file.size // 文件大小
+
+    // Nginx 的静态资源目录
+    const nginxStaticPath = 'E:/Nginx/html/uploadFile'
+
+    // 绝对路径
+    const absPath = path.resolve(nginxStaticPath, originalname)
+
+    // 同步写入文件
+    fs.writeFileSync(absPath, file.buffer)
+
+    // 解析 epub 电子书
+    const parser = new ParseEpubBook(absPath, file)
+    const res = await parser.toParse()
+
+    return {
+      code: 0,
+      result: {
+        originalname,
+        mimetype,
+        size,
+        path: absPath,
+        bookInfo_and_content: res
+      },
+      message: '上传成功'
+    }
   }
 
   update(id: number, updateBookDto: UpdateBookDto) {

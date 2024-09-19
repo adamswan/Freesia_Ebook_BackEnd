@@ -16,30 +16,7 @@ export class BookController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   uploadBook(@UploadedFile(new ParseFilePipeBuilder().addFileTypeValidator({ fileType: 'epub' }).build()) file: Express.Multer.File) {
-
-    console.log('file', file);
-
-    const originalname = file.originalname // 文件原始名称
-    const mimetype = file.mimetype // 文件媒体格式
-    const size = file.size // 文件大小
-
-    // Nginx 的静态资源目录
-    const nginxStaticPath = 'E:/Nginx/html/uploadFile'
-    // 绝对路径
-    const absPath = path.resolve(nginxStaticPath, originalname)
-    // 同步写入文件
-    fs.writeFileSync(absPath, file.buffer)
-
-    return {
-      code: 0,
-      result: {
-        originalname,
-        mimetype,
-        size,
-        path: absPath
-      },
-      message: '上传成功'
-    }
+    return this.bookService.handleUploadBook(file)
   }
 
   // 获取所有书

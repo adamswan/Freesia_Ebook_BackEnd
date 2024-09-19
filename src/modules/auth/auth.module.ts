@@ -27,7 +27,7 @@ import { jwtConstants } from './constants/jwtConstants'
       secret: jwtConstants.secret, // 私钥
       signOptions: {
         // 过期时间
-        expiresIn: `${24 * 60 * 60}s`
+        expiresIn: `${72 * 60 * 60}s`
       }
     })
   ]
