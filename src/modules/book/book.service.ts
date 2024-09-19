@@ -139,7 +139,7 @@ export class BookService {
     newBook.updateType = 0
 
     // 3. 入表
-    const res =  await this.bookRepository.save(newBook)
+    const res = await this.bookRepository.save(newBook)
 
     return {
       result: res,
@@ -151,7 +151,11 @@ export class BookService {
     return `This action updates a #${id} book`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} book`;
+  async remove(id: number) {
+    const res = await this.bookRepository.delete(id)
+    return {
+      result: res,
+      message: '删除成功'
+    };
   }
 }

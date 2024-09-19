@@ -44,7 +44,9 @@ export class BookController {
     return this.bookService.update(+id, updateBookDto);
   }
 
+  // 删除电子书
   @Delete(':id')
+  @UseInterceptors(FormattInterceptor) 
   remove(@Param('id') id: string) {
     return this.bookService.remove(+id);
   }
