@@ -34,10 +34,16 @@ export class ParseEpubBook {
         const content_opf_file_path = await this.parseRootFile(unzipEpubDirPath)
 
         //! step 4. 解析电子书的 content.opf 文件, 得到电子书的关键信息
-        const bookInfo_And_Content = await this.parsContentOpfFile(unzipEpubDirPath, content_opf_file_path)
+        const bookInfo_And_Content: any = await this.parsContentOpfFile(unzipEpubDirPath, content_opf_file_path)
         // console.log('书的信息和目录', bookInfo_And_Content)
 
-        //! step 5. 解析完成，删除拷贝文件和解压文件
+        //! step 5. 在删除临时文件前, 拷贝封面
+        const coverRealPath = this.copyCoverImage(bookInfo_And_Content)
+        // console.log('coverRealPath', coverRealPath)
+
+        bookInfo_And_Content.cover = coverRealPath
+
+        //! step 6. 解析完成，删除拷贝文件和解压文件
         fse.removeSync(targetPath)
         fse.removeSync(unzipEpubDirPath)
 
@@ -133,5 +139,32 @@ export class ParseEpubBook {
                 })
 
         })
+    }
+
+    // 拷贝电子书封面,给前端显示用
+    copyCoverImage(data, tmpDir?) {
+        const { cover } = data;
+        // 假设 cover 是封面图片的绝对路径  
+
+        // 生成封面的目标文件夹路径  
+        const coverDir = path.resolve('E:/Nginx/html/uploadFile', 'cover');
+        // 确保封面文件夹存在  
+        fse.mkdirpSync(coverDir);
+
+        // 提取封面文件名 
+        const coverFileName = path.basename(cover);
+        // 生成封面的新路径  
+        const coverNewPath = path.resolve(coverDir, coverFileName);
+
+        // 拷贝封面图片到目标位置  
+        fse.copySync(cover, coverNewPath);
+
+        // 返回封面图片的新路径，以便前端可以访问  
+        // console.log('coverNewPath', coverNewPath)
+
+        // 临时拼接, 已适应我本地的nginx 
+        const coverUrl = `http://localhost:88/uploadFile/cover/${coverFileName}`;
+
+        return coverUrl;
     }
 }
