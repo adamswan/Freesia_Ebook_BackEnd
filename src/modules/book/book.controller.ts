@@ -5,12 +5,18 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { BookSearch } from 'src/types/book';
 import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
-import * as fs from 'fs'
-import * as path from 'path'
+
 
 @Controller('book')
 export class BookController {
   constructor(private readonly bookService: BookService) { }
+
+  // 新增电子书
+  @Post()
+  @UseInterceptors(FormattInterceptor)
+  addNewBook(@Body() data: CreateBookDto) {
+    return this.bookService.addNewBook(data)
+  }
 
   // 上传电子书
   @Post('upload')

@@ -116,6 +116,37 @@ export class BookService {
     }
   }
 
+  // 新增电子书
+  async addNewBook(data: CreateBookDto) {
+    // 1. 创建一个实体对象
+    const newBook = new Book()
+
+    // 2. 向实体对象上添加属性
+    newBook.fileName = data.fileName
+    newBook.cover = data.coverPath
+    newBook.title = data.title
+    newBook.author = data.author
+    newBook.publisher = data.publisher
+    newBook.bookId = data.fileName
+    newBook.category = data.category
+    newBook.categoryText = '未知'
+    newBook.language = data.language
+    newBook.rootFile = data.rootFile
+    newBook.originName = data.originName
+    newBook.filePath = data.filePath
+    newBook.unzipPath = '未知路径'
+    newBook.coverPath = data.coverPath
+    newBook.updateType = 0
+
+    // 3. 入表
+    const res =  await this.bookRepository.save(newBook)
+
+    return {
+      result: res,
+      message: '新增成功'
+    }
+  }
+
   update(id: number, updateBookDto: UpdateBookDto) {
     return `This action updates a #${id} book`;
   }
