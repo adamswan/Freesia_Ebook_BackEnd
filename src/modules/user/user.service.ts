@@ -31,7 +31,6 @@ export class UserService {
     newUser.nickname = createUserDto.nickname
     newUser.active = 1 // 默认激活
     const res = await this.userRepository.save(newUser)
-    // console.log('res1', res)
     return res;
   }
 

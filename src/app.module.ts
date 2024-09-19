@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { BookModule } from './modules/book/book.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MenuModule } from './modules/menu/menu.module';
+import { ContentsModule } from './modules/contents/contents.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
@@ -32,6 +33,7 @@ dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
       autoLoadEntities: true,
     }),
     MenuModule,
+    ContentsModule,
   ],
 })
 export class AppModule { }
