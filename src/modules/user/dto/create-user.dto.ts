@@ -1,9 +1,9 @@
 export class CreateUserDto {
     username: string
 
-    password: string
+    password?: string
 
-    role: string
+    role?: string
 
     avatar: string
 
