@@ -8,3 +8,9 @@ export interface PayloadOfRequest {
     userid: number
     [propName: string]: any
 }
+
+export interface UserSearch {
+    id?: number
+    username?: string
+    active?: number
+}

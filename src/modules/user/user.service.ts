@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, Like, Repository } from 'typeorm';
 // import { UserLogin } from 'src/types/user';
 // import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
@@ -35,8 +35,39 @@ export class UserService {
   }
 
   // 查询所有用户
-  findAll() {
-    return this.userRepository.find();
+  async findAll(queryObj) {
+    let page = Number(queryObj.page) || 1 // 页码
+    let pageSize = Number(queryObj.pageSize) || 10 // 要多少条数据
+    // 兜底
+    if (page <= 0) {
+      page = 1
+    }
+    if (pageSize <= 0) {
+      pageSize = 10
+    }
+
+    const userID = queryObj.id
+    const username = queryObj.username
+    const active = queryObj.active
+
+    const searchObj: any = {
+      where: {
+        id: userID ? Like(`%${userID}%`) : Like(`%%`),
+        username: username ? Like(`%${username}%`) : Like(`%%`),
+        active: active ? Like(`%${active}%`) : Like(`%%`)
+      },
+      skip: (page - 1) * pageSize, // 偏移量
+      take: pageSize, // 每页数据条数
+      // 排除掉 password
+      select: ['id', 'role', 'avatar', 'nickname', 'active', 'username'],
+    }
+
+    const userList = await this.userRepository.find(searchObj);
+
+    return {
+      result: userList,
+      message: '查询成功'
+    }
   }
 
   // 查询单个用户

@@ -1,9 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseFilters, Request, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseFilters, Request, UseInterceptors, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { HttpExceptionFilter } from 'src/http-exception/http-exception';
-import { PayloadOfRequest } from 'src/types/user';
+import { PayloadOfRequest, UserSearch } from 'src/types/user';
 import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
 @Controller('user')
@@ -17,10 +17,11 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  // 查询所有用户
+  // 查询所有用户(支持条件查询、分页查询)
   @Get()
-  findAllUsers() {
-    return this.userService.findAll();
+  @UseInterceptors(FormattInterceptor)
+  findAllUsers(@Query() queryObj: UserSearch) {
+    return this.userService.findAll(queryObj);
   }
 
   // 获取用户资料
