@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseInterceptors, UploadedFile, ParseFilePipeBuilder } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseInterceptors, UploadedFile, ParseFilePipeBuilder, Res } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -48,8 +48,14 @@ export class BookController {
 
   // 删除电子书
   @Delete(':id')
-  @UseInterceptors(FormattInterceptor) 
+  @UseInterceptors(FormattInterceptor)
   remove(@Param('id') id: string) {
     return this.bookService.remove(+id);
+  }
+
+  // 下载电子书
+  @Get('download/:id')
+  downloadByBinary(@Param('id') id, @Res() res) {
+    return this.bookService.downloadByBinary(+id, res)
   }
 }

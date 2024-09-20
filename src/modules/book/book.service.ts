@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs'
 import * as path from 'path'
 import { ParseEpubBook } from './ParseEpubBook';
+import { zip } from 'compressing'
 
 @Injectable()
 export class BookService {
@@ -147,6 +148,7 @@ export class BookService {
     }
   }
 
+  // 更新电子书
   async update(id: number, data: UpdateBookDto) {
     const res = await this.bookRepository.update(id, data)
     return {
@@ -155,11 +157,40 @@ export class BookService {
     };
   }
 
+  // 删除电子书
   async remove(id: number) {
     const res = await this.bookRepository.delete(id)
     return {
       result: res,
       message: '删除成功'
     };
+  }
+
+  // 下载电子书（流式下载）
+  async downloadByBinary(id, res) {
+    //! step 1. 创建zip压缩的流对象
+    const stream = new zip.Stream()
+
+    // ! step 2. 获取电子书的绝对路径
+    // 先获取id对应的电子书文件名
+    const { fileName } = await this.bookRepository.findOne({
+      where: {
+        id
+      }
+    })
+    // Nginx 的静态资源目录
+    const nginxStaticPath = 'E:/Nginx/html/uploadFile'
+    // 电子书的绝对路径
+    const fileAbsPath = path.resolve(nginxStaticPath, fileName)
+
+    // ! step 3. 将目标文件转换为zip压缩格式个二进制数据
+    await stream.addEntry(fileAbsPath)
+
+    // ! step 4. 响应对象设置响应头
+    res.setHeader('Content-Type', 'application/octet-stream') // 响应内容
+    res.setHeader('Content-Disposition', 'attachment;filename=EPUBBOOK') // 附加信息
+
+    //! step 5. pipe() 方法，将流文件返回出去
+    stream.pipe(res)
   }
 }
