@@ -147,8 +147,12 @@ export class BookService {
     }
   }
 
-  update(id: number, updateBookDto: UpdateBookDto) {
-    return `This action updates a #${id} book`;
+  async update(id: number, data: UpdateBookDto) {
+    const res = await this.bookRepository.update(id, data)
+    return {
+      result: res,
+      message: '更新成功'
+    };
   }
 
   async remove(id: number) {

@@ -39,9 +39,11 @@ export class BookController {
     return this.bookService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
-    return this.bookService.update(+id, updateBookDto);
+  // 更新电子书
+  @Post('update/:id')
+  @UseInterceptors(FormattInterceptor)
+  update(@Param('id') id: string, @Body() data: UpdateBookDto) {
+    return this.bookService.update(+id, data);
   }
 
   // 删除电子书
