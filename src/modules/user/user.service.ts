@@ -20,7 +20,7 @@ export class UserService {
   }
 
   // 新增用户
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto) {
     // 先创建 user 实例
     const newUser = new User()
     // 再把传入的对象，添加为 user 实例的属性
@@ -29,9 +29,12 @@ export class UserService {
     newUser.role = createUserDto.role
     newUser.avatar = createUserDto.avatar
     newUser.nickname = createUserDto.nickname
-    newUser.active = 1 // 默认激活
-    const res = await this.userRepository.save(newUser)
-    return res;
+    newUser.active = createUserDto.active // 默认激活
+    await this.userRepository.save(newUser)
+    return {
+      result: '成功',
+      message: '查询成功'
+    }
   }
 
   // 查询所有用户
@@ -78,12 +81,20 @@ export class UserService {
   }
 
   // 删除指定用户
-  remove(id: number): Promise<DeleteResult> {
-    return this.userRepository.delete(id);
+ async remove(id: number) {
+    await this.userRepository.delete(id);
+    return {
+      result: '删除成功',
+      message: '删除成功'
+    };
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, data: UpdateUserDto) {
+    const res = await this.userRepository.update(id, data)
+    return {
+      result: res,
+      message: '更新成功'
+    };
   }
 
   // 登录时查询用户是否存在, 用户名是唯一的

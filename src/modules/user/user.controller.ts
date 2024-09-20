@@ -13,8 +13,9 @@ export class UserController {
 
   // 新增用户
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @UseInterceptors(FormattInterceptor)
+  create(@Body() data: CreateUserDto) {
+    return this.userService.create(data);
   }
 
   // 查询所有用户(支持条件查询、分页查询)
@@ -43,12 +44,14 @@ export class UserController {
 
   // 删除指定用户
   @Delete(':id')
+  @UseInterceptors(FormattInterceptor)
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.userService.remove(id);
   }
 
   // 更新用户
-  @Patch(':id')
+  @Post(':id')
+  @UseInterceptors(FormattInterceptor)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }

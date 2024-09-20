@@ -6,7 +6,7 @@ import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs'
 import * as path from 'path'
-import { ParseEpubBook } from './ParseEpubBook';
+import { ParseEpubBook } from '../../lib-by-adams/ParseEpubBook';
 import { zip } from 'compressing'
 
 @Injectable()
