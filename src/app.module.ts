@@ -7,6 +7,7 @@ import { BookModule } from './modules/book/book.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MenuModule } from './modules/menu/menu.module';
 import { ContentsModule } from './modules/contents/contents.module';
+import { RoleModule } from './modules/role/role.module';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
@@ -34,6 +35,7 @@ dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
     }),
     MenuModule,
     ContentsModule,
+    RoleModule,
   ],
 })
 export class AppModule { }
