@@ -9,6 +9,35 @@ import { RoleSearch } from 'src/types/role';
 export class RoleController {
   constructor(private readonly roleService: RoleService) { }
 
+  // 关联角色与菜单
+  @Post('/linkedMenu')
+  @UseInterceptors(FormattInterceptor)
+  link_Role_Menu(@Query('roleID') roleID, @Query('menuID') menuID) {
+    return this.roleService.link_Role_Menu(+roleID, +menuID);
+  }
+
+  // 更新关联角色与菜单
+  @Post('/linkedMenu/update')
+  @UseInterceptors(FormattInterceptor)
+  link_Role_Menu_Update(@Query('roleID') roleID, @Query('menuID') menuID) {
+    return this.roleService.link_Role_Menu_Update(+roleID, +menuID);
+  }
+
+  // 查询当前角色已绑定的菜单列表
+  @Get('/linkedMenu/list/:id')
+  @UseInterceptors(FormattInterceptor)
+  getListOf_Role_Menu(@Param('id') id) {
+    return this.roleService.getListOf_Role_Menu(+id);
+  }
+
+  // 删除已存在的绑定关系
+  @Delete('/linkedMenu/:id')
+  @UseInterceptors(FormattInterceptor)
+  deleteAlreadyExist(@Param('id') id) {
+    return this.roleService.deleteAlreadyExist(+id);
+  }
+
+
   // 新增角色
   @Post()
   @UseInterceptors(FormattInterceptor)
@@ -45,4 +74,5 @@ export class RoleController {
   remove(@Param('id') id: string) {
     return this.roleService.remove(+id);
   }
+
 }

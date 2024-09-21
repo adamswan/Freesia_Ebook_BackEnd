@@ -35,7 +35,7 @@ dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
     }),
     MenuModule,
     ContentsModule,
-    RoleModule,
+    RoleModule
   ],
 })
 export class AppModule { }

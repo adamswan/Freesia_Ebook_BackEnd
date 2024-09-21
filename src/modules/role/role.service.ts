@@ -5,13 +5,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
 import { Like, Repository } from 'typeorm';
 import { UpdateRole } from 'src/types/role';
+import { Role_Menu } from './entities/role_menu.entity';
+
 
 @Injectable()
 export class RoleService {
   constructor(
-    //! 注入 role 表的存储库
+    //! 注入 Role 表的存储库
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Role_Menu)
+    private readonly roleMenuRepository: Repository<Role_Menu>
+
   ) {
     // 
   }
@@ -75,10 +80,58 @@ export class RoleService {
   }
 
   async remove(id: number) {
+    // 先删角色与菜单的绑定关系，
+    await this.roleMenuRepository.delete({ roleId: id })
+    // 再删除角色本身
     const res = await this.roleRepository.delete(id)
     return {
       result: res,
       message: "删除成功"
+    }
+  }
+
+  // 关联角色与菜单
+  async link_Role_Menu(roleID: number, menuID: number) {
+    const newBindings = new Role_Menu()
+    newBindings.roleId = roleID
+    newBindings.menuId = menuID
+    const res = await this.roleMenuRepository.save(newBindings)
+    return {
+      result: res,
+      message: '绑定成功'
+    }
+  }
+
+  // 更新关联角色与菜单
+  async link_Role_Menu_Update(roleID: number, menuID: number) {
+    const newBindings = new Role_Menu()
+    newBindings.roleId = roleID
+    newBindings.menuId = menuID
+    const res = await this.roleMenuRepository.save(newBindings)
+    return {
+      result: res,
+      message: '更新成功'
+    }
+  }
+
+  async deleteAlreadyExist(roleID: number) {
+    const res = await this.roleMenuRepository.delete({ roleId: roleID })
+    return {
+      result: res,
+      message: '删除成功'
+    }
+  }
+
+  // 查询角色和菜单的绑定关系
+  async getListOf_Role_Menu(id) {
+    const res = await this.roleMenuRepository.find({
+      where: {
+        roleId: id
+      }
+    })
+    return {
+      result: res,
+      message: '查询成功'
     }
   }
 }
