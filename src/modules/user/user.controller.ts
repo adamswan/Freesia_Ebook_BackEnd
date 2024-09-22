@@ -5,13 +5,23 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { HttpExceptionFilter } from 'src/http-exception/http-exception';
 import { PayloadOfRequest, UserSearch } from 'src/types/user';
 import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
+import { Public } from '../auth/public.decorator';
 
 @Controller('user')
 @UseFilters(HttpExceptionFilter)
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
-  // 新增用户
+  // 新增用户（自己注册）
+  @Post('register')
+  @Public() // 标识为公共接口，不需要校验 token
+  @UseInterceptors(FormattInterceptor)
+  register(@Body() data) {
+    return this.userService.register(data)
+  }
+
+
+  // 新增用户（管理员新增）
   @Post()
   @UseInterceptors(FormattInterceptor)
   create(@Body() data: CreateUserDto) {

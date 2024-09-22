@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity('role')
 export class Role {
@@ -6,6 +6,7 @@ export class Role {
     id: number
 
     @Column()
+    @Unique(['name'])
     name: string
 
     @Column()

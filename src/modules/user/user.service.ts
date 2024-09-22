@@ -1,11 +1,10 @@
-import { Injectable, Param, UseFilters } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Param, UseFilters } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
+import * as md5 from 'md5'
 import { DeleteResult, Like, Repository } from 'typeorm';
-// import { UserLogin } from 'src/types/user';
-// import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 
 
 @Injectable()
@@ -19,7 +18,34 @@ export class UserService {
 
   }
 
-  // 新增用户
+  // 新增用户（自己注册）
+  async register(data) {
+
+    const res = await this.userRepository.find({ where: { username: data.username } })
+
+    console.log('进来了', data, res)
+
+    if (res.length !== 0) {
+      // 禁止注册同名角色
+      throw new HttpException({
+        code: HttpStatus.BAD_REQUEST,
+        errorMSG: '已存在相同用户',
+      }, HttpStatus.BAD_REQUEST);
+    }
+
+    const newUser = new User()
+    newUser.username = data.username
+    newUser.password = md5(data.password).toUpperCase()
+    newUser.role = JSON.stringify(['role'])
+
+    await this.userRepository.save(newUser)
+    return {
+      result: '成功',
+      message: '注册成功'
+    }
+  }
+
+  // 新增用户(管理员新增)
   async create(createUserDto: CreateUserDto) {
     // 先创建 user 实例
     const newUser = new User()
@@ -33,7 +59,7 @@ export class UserService {
     await this.userRepository.save(newUser)
     return {
       result: '成功',
-      message: '查询成功'
+      message: '新增成功'
     }
   }
 
@@ -81,7 +107,7 @@ export class UserService {
   }
 
   // 删除指定用户
- async remove(id: number) {
+  async remove(id: number) {
     await this.userRepository.delete(id);
     return {
       result: '删除成功',

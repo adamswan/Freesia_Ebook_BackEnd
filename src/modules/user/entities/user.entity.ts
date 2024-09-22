@@ -13,15 +13,15 @@ export class User {
     @Column()
     password: string
 
-    @Column()
-    role: string
+    @Column({ nullable: true })
+    role: string | null
 
-    @Column()
-    avatar: string
+    @Column({ nullable: true })
+    avatar: string | null
 
-    @Column()
-    nickname: string
+    @Column({ nullable: true })
+    nickname: string | null
 
-    @Column()
-    active: number
+    @Column({ nullable: true })
+    active: number | null
 }

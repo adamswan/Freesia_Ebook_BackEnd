@@ -1,5 +1,4 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { UserService } from '../user/user.service';
 import * as md5 from 'md5'
 import { JwtService } from '@nestjs/jwt';
@@ -8,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
 import { AddNewAuthDto } from './dto/add-new-auth.dto';
 import { Role_Auth } from './entities/role_auth.entity';
+
 
 @Injectable()
 export class AuthService {
@@ -146,5 +146,12 @@ export class AuthService {
       result: res,
       message: '查询成功'
     }
+  }
+
+  async findAuthMarkById(authId) {
+    const res = await this.authRepository.findBy({
+      id: authId
+    })
+    return res
   }
 }

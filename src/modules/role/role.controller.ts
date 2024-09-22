@@ -51,6 +51,13 @@ export class RoleController {
     return this.roleService.deleteAlreadyExistRoleAuth(+id);
   }
 
+  // 根据角色名，查询功能权限的字段
+  @Post('getAuthByRole')
+  @UseInterceptors(FormattInterceptor)
+  getAuthByRole(@Body('roles') roles: string) {
+    return this.roleService.getAuthByRole(roles);
+  }
+
   // 新增角色
   @Post()
   @UseInterceptors(FormattInterceptor)

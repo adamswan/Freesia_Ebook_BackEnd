@@ -21,12 +21,6 @@ export class AuthController {
     return this.authService.login(params.username, params.password)
   }
 
-  // 注册
-  @Post('register')
-  register(@Body() createAuthDto: CreateAuthDto) {
-    return '注册';
-  }
-
   // 获取权限列表
   @Get()
   @UseInterceptors(FormattInterceptor)

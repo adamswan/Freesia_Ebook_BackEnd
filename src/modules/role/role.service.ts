@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -25,6 +25,15 @@ export class RoleService {
   }
 
   async create(data: CreateRoleDto) {
+    const role = await this.roleRepository.find({ where: { name: data.name } })
+    if (role.length !== 0) {
+      // 禁止注册同名角色
+      throw new HttpException({
+        code: HttpStatus.BAD_REQUEST,
+        errorMSG: '已存在相同角色名',
+      }, HttpStatus.BAD_REQUEST);
+    }
+
     const newRole = new Role()
     newRole.name = data.name
     newRole.remark = data.remark
@@ -155,6 +164,44 @@ export class RoleService {
     })
     return {
       result: res,
+      message: '查询成功'
+    }
+  }
+
+  // 根据角色名，查询功能权限的字段
+  async getAuthByRole(roles: string) {
+    let arr = JSON.parse(roles)
+
+    //!! step 1. 查找角色id
+    const roleIds = []
+    for (let i = 0; i < arr.length; i++) {
+      const resArr = await this.roleRepository.findBy({
+        name: arr[i]
+      })
+      roleIds.push(resArr[0]?.id)
+    }
+
+    //!! step 2. 根据角色id 查询对应的功能权限
+    let authIds = []
+    for (let i = 0; i < roleIds.length; i++) {
+      const arr = await this.authService.findAuthByID(roleIds[i])
+      if (arr.result.length !== 0) {
+        let authIdPart = arr.result.map(e => e.authId)
+        authIds.push(...authIdPart)
+      }
+    }
+    // 多个角色的功能权限可能相同，所以汇聚到一个用户上的功能权限会重复，故去重
+    authIds = [...new Set(authIds)]
+
+    // !! step 3. 根据功能权限id，查询权限标识
+    let authMarks = []
+    for (let i = 0; i < authIds.length; i++) {
+      const arr = await this.authService.findAuthMarkById(authIds[i])
+      authMarks.push(...arr.map(e => e.key))
+    }
+
+    return {
+      result: authMarks,
       message: '查询成功'
     }
   }
