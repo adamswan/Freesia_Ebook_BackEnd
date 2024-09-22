@@ -1,16 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseFilters, Request, UseInterceptors, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseIntPipe, UseFilters, Request, UseInterceptors, Query, Logger } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { HttpExceptionFilter } from 'src/http-exception/http-exception';
+// import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
 import { PayloadOfRequest, UserSearch } from 'src/types/user';
 import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 import { Public } from '../auth/public.decorator';
 
 @Controller('user')
-@UseFilters(HttpExceptionFilter)
+// @UseFilters(HttpExceptionFilter)
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(
+    private readonly userService: UserService,
+    //! 使用 winston 的日志
+    private readonly localLogger: Logger
+  ) {
+    this.localLogger.log('局部的 logger 初始化成功')
+   }
 
   // 新增用户（自己注册）
   @Post('register')

@@ -2,14 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseFilters, UseInter
 import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { HttpExceptionFilter } from 'src/http-exception/http-exception';
+// import { HttpExceptionFilter } from 'src/http-exception/http-exception.filter';
 import { UserLogin } from 'src/types/user';
 import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 import { AuthSearch } from 'src/types/auth';
 import { AddNewAuthDto } from './dto/add-new-auth.dto';
 
 @Controller('auth')
-@UseFilters(HttpExceptionFilter) // 控制器级别的拦截器
+// @UseFilters(HttpExceptionFilter) // 控制器级别的拦截器
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 

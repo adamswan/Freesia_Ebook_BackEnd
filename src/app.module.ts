@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Logger,Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
@@ -12,9 +12,10 @@ import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
 
+@Global()
 @Module({
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Logger],
   imports: [
     UserModule,
     AuthModule,
@@ -37,5 +38,7 @@ dotenv.config({ path: '.env.develop' }); // 加载指定环境变量
     ContentsModule,
     RoleModule
   ],
+  // 添加 Logger
+  exports: [Logger]
 })
 export class AppModule { }
