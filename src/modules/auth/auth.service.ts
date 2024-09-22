@@ -7,6 +7,7 @@ import { Like, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Auth } from './entities/auth.entity';
 import { AddNewAuthDto } from './dto/add-new-auth.dto';
+import { Role_Auth } from './entities/role_auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,8 @@ export class AuthService {
     private jwtService: JwtService,
     @InjectRepository(Auth)
     private readonly authRepository: Repository<Auth>,
+    @InjectRepository(Role_Auth)
+    private readonly roleAuthRepository: Repository<Role_Auth>,
   ) {
     // 
   }
@@ -50,6 +53,7 @@ export class AuthService {
     }
   }
 
+  // 查找权限
   async findAll(queryObj) {
     let page = Number(queryObj.page) || 1 // 页码
     let pageSize = Number(queryObj.pageSize) || 10 // 要多少条数据
@@ -92,7 +96,7 @@ export class AuthService {
     }
   }
 
-
+  // 更新权限
   async update(id: number, data: AddNewAuthDto) {
     const res = await this.authRepository.update(id, data)
     return {
@@ -101,11 +105,46 @@ export class AuthService {
     }
   }
 
+  // 删除权限
   async remove(id: number) {
     const res = await this.authRepository.delete(id)
     return {
       result: res,
       message: '删除成功'
+    }
+  }
+
+  // 绑定角色和权限
+  async linkRoleAndAuth(roleId: number, authId: number) {
+    const newBindings = new Role_Auth()
+    newBindings.roleId = roleId
+    newBindings.authId = authId
+    const res = await this.roleAuthRepository.save(newBindings)
+    return {
+      result: res,
+      message: '绑定成功'
+    }
+  }
+
+  // 解绑角色和权限
+  async unlinkRoleAndAuth(roleId: number) {
+    const res = await this.roleAuthRepository.delete({ roleId })
+    return {
+      result: res,
+      message: '解除成功'
+    }
+  }
+
+  // 查询roleId对应的功能权限
+ async findAuthByID(roleId) {
+    const res = await this.roleAuthRepository.find({
+      where: {
+        roleId
+      }
+    })
+    return {
+      result: res,
+      message: '查询成功'
     }
   }
 }

@@ -41,6 +41,20 @@ export class AuthController {
     return this.authService.addAuthd(data);
   }
 
+  // 绑定角色和权限
+  @Post('linkRoleAndAuth')
+  @UseInterceptors(FormattInterceptor)
+  linkRoleAndAuth(@Query('roleId') roleId: string, @Query('authId') authId: string) {
+    return this.authService.linkRoleAndAuth(+roleId, +authId);
+  }
+
+  // 查询roleId对应的功能权限
+  @Get('linkedAuth/list')
+  @UseInterceptors(FormattInterceptor)
+  findAuthByID(@Query('roleId') roleId: string) {
+    return this.authService.findAuthByID(+roleId);
+  }
+
   // 编辑权限
   @Post(':id')
   @UseInterceptors(FormattInterceptor)
@@ -54,6 +68,4 @@ export class AuthController {
   remove(@Param('id') id: string) {
     return this.authService.remove(+id);
   }
-
-
 }

@@ -6,7 +6,7 @@ import { Role } from './entities/role.entity';
 import { Like, Repository } from 'typeorm';
 import { UpdateRole } from 'src/types/role';
 import { Role_Menu } from './entities/role_menu.entity';
-
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class RoleService {
@@ -14,8 +14,11 @@ export class RoleService {
     //! 注入 Role 表的存储库
     @InjectRepository(Role)
     private readonly roleRepository: Repository<Role>,
+
     @InjectRepository(Role_Menu)
-    private readonly roleMenuRepository: Repository<Role_Menu>
+    private readonly roleMenuRepository: Repository<Role_Menu>,
+
+    private readonly authService: AuthService
 
   ) {
     // 
@@ -80,9 +83,11 @@ export class RoleService {
   }
 
   async remove(id: number) {
-    // 先删角色与菜单的绑定关系，
+    // 先删角色与菜单权限的绑定关系，
     await this.roleMenuRepository.delete({ roleId: id })
-    // 再删除角色本身
+    // 再删角色与功能权限的绑定关系，
+    await this.authService.unlinkRoleAndAuth(id)
+    // 最后删除角色本身
     const res = await this.roleRepository.delete(id)
     return {
       result: res,
@@ -114,8 +119,27 @@ export class RoleService {
     }
   }
 
-  async deleteAlreadyExist(roleID: number) {
+  // 更新关联角色与功能权限
+  async link_Role_Auth_Update(roleID: number, menuID: number) {
+    const res = await this.authService.linkRoleAndAuth(roleID, menuID)
+    return {
+      result: res,
+      message: '更新成功'
+    }
+  }
+
+  // 解除角色与菜单的绑定关系
+  async deleteAlreadyExistRoleMenu(roleID: number) {
     const res = await this.roleMenuRepository.delete({ roleId: roleID })
+    return {
+      result: res,
+      message: '删除成功'
+    }
+  }
+
+  // 解除角色和功能权限的关系
+  async deleteAlreadyExistRoleAuth(roleID: number) {
+    const res = await this.authService.unlinkRoleAndAuth(roleID)
     return {
       result: res,
       message: '删除成功'

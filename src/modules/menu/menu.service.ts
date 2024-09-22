@@ -136,7 +136,6 @@ export class MenuService {
 
   // 更新菜单
   async update(id, updateMenuDto: UpdateMenuDto) {
-    console.log('editMenu', updateMenuDto)
     const res = await this.menuRepository.update(id, updateMenuDto)
     return {
       result: res,

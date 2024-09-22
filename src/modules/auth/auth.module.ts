@@ -34,6 +34,8 @@ import { Role_Auth } from './entities/role_auth.entity';
         expiresIn: `${72 * 60 * 60}s`
       }
     })
-  ]
+  ],
+
+  exports: [AuthService]
 })
 export class AuthModule { }

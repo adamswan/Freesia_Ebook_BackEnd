@@ -23,6 +23,13 @@ export class RoleController {
     return this.roleService.link_Role_Menu_Update(+roleID, +menuID);
   }
 
+  // 更新关联角色与功能权限
+  @Post('/linkedAuth/update')
+  @UseInterceptors(FormattInterceptor)
+  link_Role_Auth_Update(@Query('roleID') roleID, @Query('menuID') menuID) {
+    return this.roleService.link_Role_Auth_Update(+roleID, +menuID);
+  }
+
   // 查询当前角色已绑定的菜单列表
   @Get('/linkedMenu/list/:id')
   @UseInterceptors(FormattInterceptor)
@@ -30,11 +37,18 @@ export class RoleController {
     return this.roleService.getListOf_Role_Menu(+id);
   }
 
-  // 删除已存在的绑定关系
+  // 删除已存在的角色和菜单的绑定关系
   @Delete('/linkedMenu/:id')
   @UseInterceptors(FormattInterceptor)
-  deleteAlreadyExist(@Param('id') id) {
-    return this.roleService.deleteAlreadyExist(+id);
+  deleteAlreadyExistRoleMenu(@Param('id') id) {
+    return this.roleService.deleteAlreadyExistRoleMenu(+id);
+  }
+
+  // 删除已存在的角色和功能权限的绑定关系
+  @Delete('/linkedAuth/:id')
+  @UseInterceptors(FormattInterceptor)
+  deleteAlreadyExistRoleAuth(@Param('id') id) {
+    return this.roleService.deleteAlreadyExistRoleAuth(+id);
   }
 
   // 新增角色

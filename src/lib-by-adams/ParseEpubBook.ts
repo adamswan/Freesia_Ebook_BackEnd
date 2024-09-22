@@ -35,11 +35,9 @@ export class ParseEpubBook {
 
         //! step 4. 解析电子书的 content.opf 文件, 得到电子书的关键信息
         const bookInfo_And_Content: any = await this.parsContentOpfFile(unzipEpubDirPath, content_opf_file_path)
-        // console.log('书的信息和目录', bookInfo_And_Content)
 
         //! step 5. 在删除临时文件前, 拷贝封面
         const coverRealPath = this.copyCoverImage(bookInfo_And_Content)
-        // console.log('coverRealPath', coverRealPath)
 
         bookInfo_And_Content.cover = coverRealPath
 
