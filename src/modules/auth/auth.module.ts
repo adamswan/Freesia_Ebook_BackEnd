@@ -6,6 +6,9 @@ import { AuthGuard } from './auth.guard';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants/jwtConstants'
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Auth } from './entities/auth.entity';
+import { Role_Auth } from './entities/role_auth.entity';
 
 @Module({
   controllers: [AuthController],
@@ -21,6 +24,7 @@ import { jwtConstants } from './constants/jwtConstants'
 
   imports: [
     UserModule,
+    TypeOrmModule.forFeature([Auth, Role_Auth]),
     // 配置 JWT
     JwtModule.register({
       global: true,

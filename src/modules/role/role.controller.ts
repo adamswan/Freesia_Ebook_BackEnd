@@ -37,7 +37,6 @@ export class RoleController {
     return this.roleService.deleteAlreadyExist(+id);
   }
 
-
   // 新增角色
   @Post()
   @UseInterceptors(FormattInterceptor)
@@ -74,5 +73,4 @@ export class RoleController {
   remove(@Param('id') id: string) {
     return this.roleService.remove(+id);
   }
-
 }
