@@ -1,6 +1,8 @@
 # 项目简介
 【小苍兰电子书管理系统】是我个人的第2个开源全栈项目，这是后端部分。基于 NestJS 从 0 到 1 实现了后端的三大核心功能模块：注册登录、权限管理、图书管理。前端部分基于 vben admin 框架二次开发，快速搭建页面
 
+前端项目仓库：https://gitee.com/adamswan/Freesia_Ebook_FrontEnd
+
 # 技术栈
 NestJS、NestJS CLI、TypeORM、MySQL、fs-extra、adam-zip、compressing、winston 等
 
