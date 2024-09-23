@@ -26,7 +26,6 @@ export class UserController {
     return this.userService.register(data)
   }
 
-
   // 新增用户（管理员新增）
   @Post()
   @UseInterceptors(FormattInterceptor)
