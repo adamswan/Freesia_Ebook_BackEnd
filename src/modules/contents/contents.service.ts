@@ -40,14 +40,6 @@ export class ContentsService {
     };
   }
 
-  findAll() {
-    return `This action returns all contents`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} content`;
-  }
-
   update(id: number, updateContentDto: UpdateContentDto) {
     return `This action updates a #${id} content`;
   }

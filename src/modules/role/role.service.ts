@@ -76,10 +76,6 @@ export class RoleService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
-  }
-
   async update(id: number, data: UpdateRoleDto) {
     const oData = {} as UpdateRole
     oData.name = data.name

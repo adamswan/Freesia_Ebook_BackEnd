@@ -72,11 +72,6 @@ export class RoleController {
     return this.roleService.findAll(queryObj);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.roleService.findOne(+id);
-  }
-
   // 更新角色
   @Post(':id')
   @UseInterceptors(FormattInterceptor)

@@ -130,10 +130,6 @@ export class MenuService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} menu`;
-  }
-
   // 更新菜单
   async update(id, updateMenuDto: UpdateMenuDto) {
     const res = await this.menuRepository.update(id, updateMenuDto)
@@ -143,6 +139,7 @@ export class MenuService {
     };
   }
 
+  // 删除菜单
   async remove(id: number) {
     const res = await this.menuRepository.delete(id);
     return {

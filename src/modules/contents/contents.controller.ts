@@ -15,21 +15,6 @@ export class ContentsController {
     return this.contentsService.create(createContentDto);
   }
 
-  @Get()
-  findAll() {
-    return this.contentsService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.contentsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateContentDto: UpdateContentDto) {
-    return this.contentsService.update(+id, updateContentDto);
-  }
-
   // 删除目录
   @Delete(':id')
   @UseInterceptors(FormattInterceptor)

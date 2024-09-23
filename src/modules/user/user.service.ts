@@ -1,10 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Param, UseFilters } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import * as md5 from 'md5'
-import { DeleteResult, Like, Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 
 
 @Injectable()
@@ -20,11 +20,7 @@ export class UserService {
 
   // 新增用户（自己注册）
   async register(data) {
-
     const res = await this.userRepository.find({ where: { username: data.username } })
-
-    console.log('进来了', data, res)
-
     if (res.length !== 0) {
       // 禁止注册同名角色
       throw new HttpException({
@@ -51,7 +47,7 @@ export class UserService {
     const newUser = new User()
     // 再把传入的对象，添加为 user 实例的属性
     newUser.username = createUserDto.username
-    newUser.password = createUserDto.password
+    newUser.password = md5(createUserDto.password).toUpperCase()
     newUser.role = createUserDto.role
     newUser.avatar = createUserDto.avatar
     newUser.nickname = createUserDto.nickname
