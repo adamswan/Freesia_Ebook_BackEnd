@@ -1,3 +1,4 @@
+import { Role } from "src/modules/role/role-enum/role-enum";
 import { Column, Entity, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 

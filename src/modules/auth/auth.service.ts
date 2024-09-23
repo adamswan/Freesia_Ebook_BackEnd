@@ -32,7 +32,7 @@ export class AuthService {
     if (user) {
       // 比较密码是否正确
       const md5Password = md5(password).toUpperCase()
-      // console.log('md5Password', md5Password)
+      console.log('md5Password', md5Password)
       if (user.password !== md5Password) {
         throw new UnauthorizedException()
       }

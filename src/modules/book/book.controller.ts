@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseInterceptors, UploadedFile, ParseFilePipeBuilder, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseIntPipe, UseInterceptors, UploadedFile, ParseFilePipeBuilder, Res, UseGuards } from '@nestjs/common';
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { BookSearch } from 'src/types/book';
 import { FormattInterceptor } from 'src/formatt-interceptor/formatt.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Role } from '../role/role-enum/role-enum';
+import { Roles } from '../role/decorator/role.decorator';
+import { RolesGuard } from '../role/role-guard/roles.guard';
 
 
 @Controller('book')
@@ -54,7 +57,10 @@ export class BookController {
   }
 
   // 下载电子书
+  // 举例：只有超级管理员（super）才能下载电子书
   @Get('download/:id')
+  // @Roles(Role.Super) // @Roles 是自定义装饰器，将该路由标记为只有超级管理员特有
+  // @UseGuards(RolesGuard) // @UseGuards(RolesGuard) 角色守卫，定义只有管理员才有权限调用这个路由
   downloadByBinary(@Param('id') id, @Res() res) {
     return this.bookService.downloadByBinary(+id, res)
   }
